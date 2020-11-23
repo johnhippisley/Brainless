@@ -1,0 +1,161 @@
+Memory Layout:
+Six general purpose registers, eight special registers used as temporary storage for use by instructions.
+Data addressed after "home cell." Variables can be indexed by their relative position.
+					[Temp8][Temp7][Temp6][Temp5][Temp4][Temp3][Temp2][Temp1][Temp0][Reg5][Reg4][Reg3][Reg2][Reg1][Reg0][0][Data0][Data1]...
+Relative position:	  -15	 -14    -13    -12    -11    -10    -9      -8    -7     -6    -5    -4    -3    -2    -1   0    +1    +2   ...
+Real position:         0	  1      2       3      4      5     6       7     8      9    10    11    12    13    14   15   16    17   ...
+
+Mnemonics:
+@(x)	: Move data pointer by relative value x (converted to <> at compile)
+*(x)	: Repeat the character x times
+Dx		: @(x)
+
+The following can simply be replace directly
+HC		: @(15)
+R0		: @(14)
+R1		: @(13)
+R2		: @(12)
+R3		: @(11)
+R4		: @(10)
+R5		: @(9)
+T0		: @(9)
+T1		: @(7)
+T2		: @(6)
+T3		: @(5)
+T4		: @(4)
+T5		: @(3)
+T6		: @(2)
+T7		: @(1)
+T8		: @(0)
+
+Instructions and their implementations:
+MOV			@(X),Y		Move value Y into X
+@(X)[-]+(Y)HC
+
+MOV			@(X),@(Y)	Move value from Y into X
+T0[-]@(X)[-]@(Y)[@(X)+T0+@(Y)-]T0[@(Y)+T0-]HC
+
+SWAP		@(X),@(Y)	Swap X and Y
+T0[-]@(X)[T0+@(X)-]@(Y)[@(X)+@(Y)-]T0[@(Y)+T0-]HC
+
+ADD			@(X),@(Y)	Sets X = X + Y
+T0[-]@(Y)[@(X)+T0+@(Y)-]T0[@(Y)+T0-]HC
+
+SUB			@(X),@(Y)	Sets X = X - Y
+T0[-]@(Y)[@(X)-T0+@(Y)-]T0[@(Y)+T0-]HC
+
+MUL			@(X),@(Y)	Sets X = X * Y
+T0[-]T1[-]@(X)[T1+@(X)-]T1[@(Y)[@(X)+T0+@(Y)-]T0[@(Y)+T0-]T1-]HC
+
+DIV			@(X),@(Y)	Sets X = X / Y
+
+T0[-]T1[-]T2[-]T3[-]@(X)[T0+@(X)-]T0[@(Y)[T1+T2+@(Y)-]T2[@(Y)+T2-]T1
+[T2+T0-[T2[-]T3+T0-]T3[T0+T3-]T2[T1-[@(X)-T1[-]]+T2-]T1-]@(X)+T0]HC
+
+
+
+
+NOT			@(X)		Sets X = !X
+T0[-]@(X)[T0+@(X)[-]]+T0[@(X)-T0-]HC
+
+AND			@(X),@(Y)	Sets X = X & Y
+T0[-]T1[-]@(X)[T1+@(X)-]T1[T1[-]@(Y)[T1+T0+@(Y)-]T0[@(Y)+T0-]T1[@(X)+T1[-]]]HC
+
+OR			@(X),@(Y)	Sets X = X || Y
+T0[-]T1[-]@(X)[T1+T0+@(X)-]T0[@(X)+T0-]
+T0[-]T2[-]@(Y)[T2+T0+@(Y)-]T0[@(Y)+T0-]
+T3[-]T4[-]T2
+[<<->]<+[<]+>[-<->>+>[<-<<+>>]<[-<]]>
+T0[-]@(X)[-]T4[@(X)+T0+T4-]T0[T4+T0-]HC
+
+PUTC		'X'			Prints value X
+T0[-]+('X').[-]HC
+
+PUTC		@(X)		Prints value at X
+@(X).HC
+
+PRINTSTR	@(X)		Prints null-terminated string beginning at X
+@(X)[.>]HC
+
+PUTINT		X			Prints integer value X
+T0[-]+(X)>>++++++++++<<[->+>-[>+>>]>[+[-<+>]>+>>]<<<<<<]>>[-]>>>++++++++++<[->-[>+>>]
+>[+[-<+>]>+>>]<<<<<]>[-]>>[>++++++[-<++++++++>]<.<<+>+>[-]]<[<[->-<]++++++[->++++++++
+<]>.[-]]<<++++++[-<++++++++>]<.[-]<<[-<+>]<[-]HC
+
+PUTINT		@(X)		Prints integer value at X
+@(X)>>++++++++++<<[->+>-[>+>>]>[+[-<+>]>+>>]<<<<<<]>>[-]>>>++++++++++<[->-[>+>>]>[+[-
+<+>]>+>>]<<<<<]>[-]>>[>++++++[-<++++++++>]<.<<+>+>[-]]<[<[->-<]++++++[->++++++++<]>.[
+-]]<<++++++[-<++++++++>]<.[-]<<[-<+>]<HC
+
+GETC		@(X)		Get one character of input and store in X
+@(X),HC
+
+GETINT		@(X)		Get integer number from input and store value in X
+T3[-]>[-]+[[-]>[-],[+[-----------[>[-]++++++[<------>-]<--<<[->>++++++++++<<]>>[-<<+>>]<+>]]]<]<
+T0[-]@(X)[-]T3[@(X)+T0+T3-]T0[T3+T0-]HC
+
+COMP		@(X),@(Y)	Sets X = (X == Y), preserves Y
+T0[-]T1[-]@(X)[T1+@(X)-]+@(Y)[T1-T0+@(Y)-]T0[@(Y)+T0-]T1[@(X)-T1[-]]
+
+Expiremental conditionals:
+
+IFZERO		@(X)		Executes instructions up to ENDIFZERO if X == 0
+T0[-]T1[-]@(X)[T0+T1+@(X)-]T0[@(X)+T0-]+T1[T0-T1[-]]T0[HC
+
+ENDIFZERO				End of IFZERO clause
+T0-]HC
+
+WHILE		@(X)
+@(X)[HC
+
+ENDWHILE	@(X)
+@(X)]HC
+
+Macros:
+DATA @(X),a,b,c,...
+	MOV @(X),a
+	MOV @(X+1),b
+	MOV @(X+2),c
+	...
+DATA @(X),"Y"
+	MOV @(X),"Y"[0]
+	MOV @(X+1),"Y"[1]
+	MOV @(X),"Y"[2]
+	...
+
+Examples:
+# Simple adding
+MOV R0,2
+MOV R1,3
+ADD R0,R1
+PUTINT R0
+
+# Hello world
+DATA D0,"Hello, World"
+PRINTSTR D0
+
+# Counts down from 100 to 0
+DATA D0,"The number is: "
+MOV R0,100
+MOV R1,1
+WHILENZERO R0
+  PRINTSTR D0
+  PUTINT R0
+  PUTC 10
+  SUB R0,R1
+ENDWHILE
+
+# Prints 2^20
+DATA D0,"2^20= "
+PRINTSTR D0
+MOV R0,1
+MOV R1,2
+MOV R2,1
+MOV R3,20
+WHILENZERO R3
+  MUL R0,R1
+  SUB R3,R2
+ENDWHILE
+PUTINT R0
+
+

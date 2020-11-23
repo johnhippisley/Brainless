@@ -1,0 +1,46 @@
+# R0 = 10, R1 = 2
+MOV R0, 10
+MOV R1, 2
+
+# Print '10, 2'
+PUTINT R0
+PUTCHAR ','
+PUTCHAR ' '
+PUTINT R1
+PUTCHAR 10
+
+# Addition
+MOV R2, R0
+ADD R2, R1
+
+# Print addition result
+PUTCHAR '+'
+PUTINT R2
+PUTCHAR 10
+
+# Subtraction
+MOV R2, R0
+SUB R2, R1
+
+# Print subtraction result
+PUTCHAR '-'
+PUTINT R2
+PUTCHAR 10
+
+# Multiplication
+MOV R2, R0
+MUL R2, R1
+
+# Print multiplication result
+PUTCHAR '*'
+PUTINT R2
+PUTCHAR 10
+
+# Division
+MOV R2, R0
+DIV R2, R1
+
+# Print division result
+PUTCHAR '/'
+PUTINT R2
+PUTCHAR 10
