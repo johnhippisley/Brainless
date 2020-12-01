@@ -19,25 +19,6 @@ std::string formatInstruction(std::string instruction)
 	for(int c = instruction.length() - 1; c >= 0 && insEnd == -1; c--)
 		if(instruction.at(c) != ' ' && instruction.at(c) != '\t' && instruction.at(c) != '\n') insEnd = c;
 	if(insBegin >= 0 && insEnd >= 0) instruction = str::cut(instruction, insBegin, insEnd);
-	// Replace identifiers
-	instruction = replaceIdentifiers(instruction);
-	// Replace identifier Dx with @(x + 16)
-	for(int begin = 0; begin < (int) instruction.length() - 1; begin++)
-	{
-		if(toupper(instruction.at(begin)) == 'D' && begin + 1 < (int) instruction.length() &&
-			isdigit(instruction.at(begin + 1)) && !str::isInside(instruction, begin, '\'') && 
-			!str::isInside(instruction, begin, '"'))
-		{
-			size_t end = begin + 1;
-			while(end < instruction.length() && isdigit(instruction.at(end))) end++;
-			// Add 1 to the number enclosed; data starts at @(+1)
-			std::string number = std::to_string(str::toInt(str::cut(instruction, begin + 1, end - 1)) + HOME_OFFSET + 1);
-			instruction.replace(begin + 1, end - begin - 1, number);
-			end += number.length() - (end - begin - 1);
-			instruction.insert(end, ")");
-			instruction.replace(begin, 1, "@(");
-		} 
-	}
 	// Force uppper case instruction name
 	std::string insName = str::toUpper(instruction.substr(0, instruction.find(" ")));
 	instruction.replace(0, instruction.find(" "), insName);
@@ -55,6 +36,22 @@ std::string replaceIdentifiers(std::string instruction)
 		instruction = str::replaceAllNotQuoted(instruction, pair.first, pair.second);
 		instruction = str::replaceAllNotQuoted(instruction, str::toUpper(pair.first), pair.second);
 	}
+	// Replace identifier Dx with @(x + DATA_OFFSET)
+	for(int begin = 0; begin < (int) instruction.length() - 1; begin++)
+	{
+		if(toupper(instruction.at(begin)) == 'D' && begin + 1 < (int) instruction.length() &&
+			isdigit(instruction.at(begin + 1)) && !str::isInside(instruction, begin, '\'') && 
+			!str::isInside(instruction, begin, '"'))
+		{
+			size_t end = begin + 1;
+			while(end < instruction.length() && isdigit(instruction.at(end))) end++;
+			std::string number = std::to_string(str::toInt(str::cut(instruction, begin + 1, end - 1)) + DATA_OFFSET);
+			instruction.replace(begin + 1, end - begin - 1, number);
+			end += number.length() - (end - begin - 1);
+			instruction.insert(end, ")");
+			instruction.replace(begin, 1, "@(");
+		} 
+	}
 	return instruction;
 }
 
@@ -63,7 +60,7 @@ ins_t parseInstruction(std::string fIns)
 {
 	ins_t ret;
 	ret.valid = false;
-	// Determine if it's valid
+	// Basic validation
 	for(size_t i = 0; i < fIns.length(); i++) if(isalpha(fIns.at(i))) ret.valid = true;
 	if(!ret.valid) return ret;
 	ret.name = str::split(fIns, ' ')[0];

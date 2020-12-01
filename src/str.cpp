@@ -99,6 +99,6 @@ std::string str::replaceAllNotQuoted(std::string str, std::string search, std::s
 }
 
 std::string str::cut(std::string str, size_t pos1, size_t pos2) { return str.substr(pos1, pos2 - pos1 + 1); }
-std::string str::stripWhite(std::string str){ return replaceAll(str, "  ", " "); }
+std::string str::stripWhite(std::string str){ return replaceAll(replaceAll(str, "\t", " "), "  ", " "); }
 bool str::equals(std::string a, std::string b){ return !a.compare(b); }
 int str::toInt(std::string str){ return atoi(str.c_str()); }

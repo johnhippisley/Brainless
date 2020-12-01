@@ -11,7 +11,7 @@ std::string generatePseudo(ins_t ins)
 		{
 			bool match = true;
 			for(size_t i = 0; i < ins.args.size(); i++)
-				if(def.args.at(i) != ins.args.at(i).type) match = false;
+				if(def.args.at(i) != ins.args.at(i).type) match = false;	
 			if(match)
 			{
 				pseudo = def.pseudo;
@@ -19,7 +19,11 @@ std::string generatePseudo(ins_t ins)
 			}
 		}
 	}
-	if(str::equals(pseudo, "")) return ""; // No matching instruction
+	if(str::equals(pseudo, "")) 
+	{
+		std::cout << "Couldn't match instruction '" << ins.name << "'" << std::endl;
+		return ""; // No matching instruction
+	}
 	// Replace argument place holders with their respected argument
 	for(size_t a = 0; a < ins.args.size(); a++)
 	{
@@ -45,7 +49,7 @@ std::string compile(program_t pseudoProgram)
 			std::string prevExec = compiled.substr(0, op);
 			while(prevExec.at(prevExec.length() - 1) == '[') prevExec = prevExec.substr(0, prevExec.length() - 1); // Prevent a last '['
 			// Replace @(x) with neccessary '<' or '>'
-			int currentPos = getCursorPosAfter(prevExec);
+			int currentPos = (int) getCursorPosAfter(prevExec);
 			int goalPos = str::toInt(compiled.substr(op + 2, compiled.find(")", op + 1) - 2));
 			std::string replaceString(abs(goalPos - currentPos), goalPos < currentPos ? '<' : '>');
 			compiled.replace(op, compiled.find(")", op) - op + 1, replaceString);
@@ -81,52 +85,24 @@ bool isOp(char character)
 	return ret;
 }
 
-// Interpret the program and return position of the data pointer after execution
 int getCursorPosAfter(std::string program)
 {
-	unsigned char memory[3000] = {0};
-	unsigned char* dp = &memory[0], *odp = dp;
-	std::vector<int> loopStack;
-	int ip = 0;
-	while(ip >= 0 && ip < (int) program.length())
+	int dp = 0;
+	for(int ip = 0; ip < (int) program.length(); ip++)
 	{
-		if(dp < odp)
-		{
-			std::cout << "Data pointer out of bounds (" << (dp - odp) << ")" << std::endl;
-			break;
-		}
 		if(isOp(program.at(ip)) || program.at(ip) == '@')
 		{
 			switch(program.at(ip))
 			{
 				case '<': dp--; break;
 				case '>': dp++; break;
-				case '-': (*dp)--; break;
-				case '+': (*dp)++; break;
-				case '[': 
-					if(*dp != 0) loopStack.push_back(ip);
-					else 
-					{
-						int brackets = 0;
-						do
-						{
-							if(program.at(ip) == '[') brackets++;
-							else if(program.at(ip) == ']') brackets--;
-						} while(brackets != 0 && ++ip < (int) program.length());
-					}
-					break;
-				case ']': 
-					if(*dp != 0) ip = loopStack.at(loopStack.size() - 1);
-					else loopStack.pop_back();
-					break;
 				case '@': // Implementation of custom command @(x); sets dp = x
 					std::string segment = str::cut(program, ip, program.find(")", ip));
 					std::cout << segment << std::endl;
-					dp = odp + str::toInt(str::inBetween(segment, "@(", ")"));
+					dp = str::toInt(str::inBetween(segment, "@(", ")"));
 					break;
 			}
 		}
-		ip++;
 	}
-	return (int) (dp - odp);
+	return dp;	
 }

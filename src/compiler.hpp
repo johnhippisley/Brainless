@@ -13,59 +13,57 @@ typedef struct InstructionDefinition
 	std::string pseudo;
 } insDef_t;
 
-const int HOME_OFFSET = 15;
+const int HOME_OFFSET = 15, DATA_OFFSET = 37;
 
 /*
-	List of all instructions, required arguments, and their implementations 
+	List of basic instructions, required arguments, and their implementations 
 	Algorithms taken from https://https://esolangs.org/wiki/Brainfuck_algorithms
 	and various other sources.
 */
 #define _L arg_t::LOCATION
 #define _V arg_t::VALUE
 #define _H arg_t::HARD_CODE
+
+// Rule #1: You cannot leave a loop with a different DP value than where you started!
 const std::vector<insDef_t> instructionList = 
 {
 	// Special instructions
-	{"DEBUG",	{},			"!"},
-	{"BF",		{_H},		"X"},
+	{"DEBUG",		{},			"!"},																			// Puts '!' in output
+	{"BF",			{_H},		"X"},																			// Puts X in output
 	// Memory instructions
-	{"MOV",		{_L, _V},	"@(X)[-]+(Y)HC"},
-	{"MOV",		{_L, _L},	"T0[-]@(X)[-]@(Y)[@(X)+T0+@(Y)-]T0[@(Y)+T0-]HC"},
-	{"SWAP",	{_L, _L},	"T0[-]@(X)[T0+@(X)-]@(Y)[@(X)+@(Y)-]T0[@(Y)+T0-]HC"},
+	{"MOV",			{_L, _V},	"@(X)[-]+(Y)HC"},																// Sets X = Y
+	{"MOV",			{_L, _L},	"T0[-]@(X)[-]@(Y)[@(X)+T0+@(Y)-]T0[@(Y)+T0-]HC"},								// Sets X = @(Y)
+	{"SWAP",		{_L, _L},	"T0[-]@(X)[T0+@(X)-]@(Y)[@(X)+@(Y)-]T0[@(Y)+T0-]HC"},							// Swaps X and Y
+	{"SHIFTR",		{_L},		"@(X)[>]<[[>+<-]<]>HC"},														// Shifts all cells until
+																												// a zero value to the right 
+																												// starting at X, where @(X) = 0 
+	
 	// Bitwise instructions
-	{"NOT",		{_L},		"T0[-]@(X)[T0+@(X)[-]]+T0[@(X)-T0-]HC"},
-	{"AND",		{_L, _L},	"T0[-]T1[-]@(X)[T1+@(X)-]T1[T1[-]@(Y)[T1+T0+@(Y)-]T0[@(Y)+T0-]T1[@(X)+T1[-]]"
-							"]HC"},
-	{"OR",		{_L, _L},	"T0[-]T1[-]@(X)[T1+T0+@(X)-]T0[@(X)+T0-]T0[-]T2[-]@(Y)[T2+T0+@(Y)-]T0[@(Y)+T"
-							"0-]T3[-]T4[-]T2[<<->]<+[<]+>[-<->>+>[<-<<+>>]<[-<]]>T0[-]@(X)[-]T4[@(X)+T0+"
-							"T4-]T0[T4+T0-]T8[-]T7[-]T6[-]T5[-]T4[-]T3[-]T2[-]T2[-]T1[-]T0[-]HC"},
+	{"NOT",			{_L},		"T0[-]@(X)[T0+@(X)[-]]+T0[@(X)-T0-]HC"},										// Sets X = !@(X)
+	{"AND",			{_L, _L},	"T0[-]T1[-]@(X)[T1+@(X)-]T1[T1[-]@(Y)[T1+T0+@(Y)-]T0[@(Y)+T0-]T1[@(X)+T1[-]]"	// Sets X = @(X) & @(Y)
+								"]HC"},
 	// Arithmetic instructions
-	{"ADD",		{_L, _L},	"T0[-]@(Y)[@(X)+T0+@(Y)-]T0[@(Y)+T0-]HC"},
-	{"SUB",		{_L, _L},	"T0[-]@(Y)[@(X)-T0+@(Y)-]T0[@(Y)+T0-]HC"},
-	{"MUL",		{_L, _L},	"T0[-]T1[-]@(X)[T1+@(X)-]T1[@(Y)[@(X)+T0+@(Y)-]T0[@(Y)+T0-]T1-]HC"},
-	{"DIV",		{_L, _L},	"@(8)[-]@(7)[-]@(6)[-]@(8)[-]@(5)[-]@(Y)[@(5)+@(8)+@(Y)-]@(8)[@(Y)+@(8)-]@(4"
-							")[-]@(8)[-]@(3)[-]@(X)[@(3)+@(8)+@(X)-]@(8)[@(X)+@(8)-]@(3)[->+>-[>+>>]>[+["
-							"-<+>]>+>>]<<<<<<]@(8)[-]@(X)[-]@(7)[@(X)+@(8)+@(7)-]@(8)[@(7)+@(8)-]@(8)[-]"
-							"@(7)[-]@(6)[-]@(5)[-]@(4)[-]@(3)[-]HC"},
+	{"INC",			{_L},		"@(X)+HC"},																		// Sets X = @(X) + 1
+	{"INC",			{_L, _V},	"@(X)+(Y)HC"},																	// Sets X = @(X) + @(Y)
+	{"DEC",			{_L},		"@(X)-HC"},																		// Sets X = @(X) - 1
+	{"DEC",			{_L, _V},	"@(X)-(Y)HC"},																	// Sets X = @(X) - @(Y)
+	{"ADD",			{_L, _L},	"T0[-]@(Y)[@(X)+T0+@(Y)-]T0[@(Y)+T0-]HC"},										// Sets X = @(X) + @(Y)
+	{"SUB",			{_L, _L},	"T0[-]@(Y)[@(X)-T0+@(Y)-]T0[@(Y)+T0-]HC"},										// Sets X = @(X) - @(Y)
+	{"MUL",			{_L, _L},	"T0[-]T1[-]@(X)[T1+@(X)-]T1[@(Y)[@(X)+T0+@(Y)-]T0[@(Y)+T0-]T1-]HC"},			// Sets X = @(X) * @(Y)
 	// Standard output instructions
-	{"PUTCHAR",	{_V},		"T0[-]+(X).[-]HC"},
-	{"PUTCHAR",	{_L},		"@(X).HC"},
-	{"PUTSTR",	{_L},		"@(X)[.>]HC"},
-	{"PUTINT",	{_L},		"T0[-]T8[-]@(X)[T8+T0+@(X)-]T0[@(X)+T0-]T8>>+(10)<<[->+>-[>+>>]>[+[-<+>]>+>>"
-							"]<(6)]>>[-]>>>+(10)<[->-[>+>>]>[+[-<+>]>+>>]<(5)]>[-]>>[>+(6)[-<+(8)>]<.<<+"
-							">+>[-]]<[<[->-<]+(6)[->+(8)<]>.[-]]<<+(6)[-<+(8)>]<.[-]<<[-<+>]T8[-]T7[-]T6"
-							"[-]T5[-]T4[-]T3[-]T2[-]T2[-]T1[-]T0[-]HC"},
-	{"PUTINT",	{_V},		"T8[-]+(X)>>+(10)<<[->+>-[>+>>]>[+[-<+>]>+>>]<(6)]>>[-]>>>+(10)<[->-[>+>>]>["
-							"+[-<+>]>+>>]<(5)]>[-]>>[>+(6)[-<+(8)>]<.<<+>+>[-]]<[<[->-<]+(6)[->+(8)<]>.["
-							"-]]<<+(6)[-<+(8)>]<.[-]<<[-<+>]<[-]T8[-]T7[-]T6[-]T5[-]T4[-]T3[-]T2[-]T2[-]"
-							"T1[-]T0[-]HC"},
+	{"PUTCHAR",		{_V},		"T0[-]+(X).[-]HC"},																// Puts X into STDOUT
+	{"PUTCHAR",		{_L},		"@(X).HC"},																		// Puts @(X) into STDOUT
+	{"PUTSTR",		{_L},		"@(X)>[.>]<[<]HC"},																// Puts null-terminated string 
+																												// starting at X into STDOUT,  
+																												// where @(X) = 0
 	// Standard input instructions
-	{"GETCHAR",	{_L},		"@(X),HC"},
+	{"GETCHAR",		{_L},		"@(X),HC"},																		// Stores character from STDIN to X
 	// Comparison instructions
-	{"COMP",	{_L, _L},	"T0[-]T1[-]@(X)[T1+@(X)-]+@(Y)[T1-T0+@(Y)-]T0[@(Y)+T0-]T1[@(X)-T1[-]]"},
-	{"WHILE",	{_L},		"@(X)[HC"},
-	{"ENDWHILE",{_L},		"@(X)]HC"}
-	// TODO Add IF _L (BOOL)
+	{"CMP",			{_L, _L},	"T0[-]T1[-]@(X)[T1+@(X)-]+@(Y)[T1-T0+@(Y)-]T0[@(Y)+T0-]T1[@(X)-T1[-]]HC"},		// Sets X = (X == Y)
+	{"WHILE",		{_L},		"@(X)[HC"},																		// Loops until 'ENDWHILE X' while @(X) > 0
+	{"ENDWHILE",	{_L},		"@(X)]HC"},																		// Marks end of while loop
+	{"IF_D",		{_L},		"@(X)[HC"},																		// Executes up to 'ENDIF' if @(X) > 0
+	{"ENDIF_D",		{_L},		"@(X)[-]]HC"}																	// Marks end of if statement; destroys X
 };
 
 const char ARG_NAMES[] = "XYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
