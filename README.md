@@ -1,7 +1,6 @@
 # Brainlesss
 A simple compiler from an assembly-like language to Brainfuck.<br>
-<i>Note</i>: in no way is this compiler optimised (actually, it produces <i>extremley</i> slow programs).<br>
-Written by John Hippisley, 2020
+<i>Note</i>: in no way is this compiler optimised (actually, it produces <i>extremley</i> slow programs).
 
 ## Usage
 <pre>
@@ -62,7 +61,7 @@ PUTDEC X		Prints decimal-string of 8-bit value in X
 <pre>
 <b>Name</b>			<b>Description</b>
 PRINT "..."		Resolves to series of PUTCHAR instructions. '\n' is resolved to
-				10 (ASCII newline), when not escaped with a preceeding '\'
+		10 (ASCII newline), when not escaped with a preceeding '\'
 PRINTLN "..."		Resolved to PRINT "..." + PUTCHAR 10 (newline)
 </pre>
 
