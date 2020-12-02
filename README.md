@@ -24,10 +24,10 @@ Arguments encased in <i>()</i> are optional.
 
 <b>Native instructions</b>:
 <pre>
-<b>Name</b>			<b>Description</b>	
+<b>Name</b>		<b>Description</b>	
 DEBUG			Inserts '!' into output
 BF X 			Inserts X into output
-MOV	X, Y		X = Y
+MOV X, Y		X = Y
 SWAP X, Y		Swaps X and Y
 SHIFTR X		Shifts all cells until a zero value to the right starting at X, @(X) == 0
 NOT	X		X = !X
@@ -70,10 +70,10 @@ The compiler does the following:
 1. Read program from source
 2. Format program to make it easily parsed
 3. Resolve special macros 
-4. Automatically resolve IF and WHILE blocks (i.e. add matching argument to ENDWHILE, resolve IF to IF_0...7)
+4. Automatically resolve <i>IF</i> and <i>WHILE</i> blocks (i.e. add matching argument to <i>ENDWHILE</i>, resolve <i>IF></i> to <i>IF_0...7</i>)
 5. Parse into a program data structure
 6. Resolve internal macros
-7. Resolve identifiers (i.e. replace HC with @(15), etc.)
+7. Resolve identifiers (i.e. replace <i>HC</i> with <i>@(15)</i>, etc.)
 8. Generate pseudo-BF (an intermediate language in which the native instructions are implemented in)
 9. Compile to Brainfuck
 
