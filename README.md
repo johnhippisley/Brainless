@@ -31,7 +31,7 @@ BF X 			Inserts X into output
 MOV	X, Y		X = Y
 SWAP X, Y		Swaps X and Y
 SHIFTR X		Shifts all cells until a zero value to the right starting at X, @(X) == 0
-NOT	X			X = !X
+NOT	X		X = !X
 AND X, Y		X = X & Y
 INC	X, (y)		X = X + y (or 1, if no y)
 DEC	x, (y)		X = X + y (or 1, if no y)
@@ -52,7 +52,7 @@ ENDIF_D X		End of 'IF' block, destroys value at X
 <pre>
 <b>Name</b>			<b>Description</b>
 IF_0...7 X		Puts X into binary register, thus not destroying the value
-ENDIF_0...7 X	End of 'IF' block
+ENDIF_0...7 X		End of 'IF' block
 OR X, Y			X = X || Y
 DIV X, Y		X = X / Y (integer division)
 PUTDEC X		Prints decimal-string of 8-bit value in X
@@ -63,7 +63,7 @@ PUTDEC X		Prints decimal-string of 8-bit value in X
 <b>Name</b>			<b>Description</b>
 PRINT "..."		Resolves to series of PUTCHAR instructions. '\n' is resolved to
 				10 (ASCII newline), when not escaped with a preceeding '\'
-PRINTLN "..."	Resolved to PRINT "..." + PUTCHAR 10 (newline)
+PRINTLN "..."		Resolved to PRINT "..." + PUTCHAR 10 (newline)
 </pre>
 
 ## How does the compiler work? 
