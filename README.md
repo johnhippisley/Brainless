@@ -1,6 +1,6 @@
 # Brainlesss
-A simple, extensive (will be), compiler from an assembly-like language to Brainfuck.<br>
-<i>Note</i>: in no way is this compiler optimised (actually, it produces <b>extremley</b> slow programs).<br>
+A simple compiler from an assembly-like language to Brainfuck.<br>
+<i>Note</i>: in no way is this compiler optimised (actually, it produces <i>extremley</i> slow programs).<br>
 Written by John Hippisley, 2020
 
 ## Usage
@@ -10,29 +10,28 @@ Written by John Hippisley, 2020
 </pre>
 
 ## Memory Layout:
-Six general purpose registers (R0-R5)
-Eight special registers used as temporary storage for use by instructions (T0-T8)
-Twelve extended registers used by internal macros (E0-E12)
-Eight binary registers used for program flow (B0-B7) 
+Six general purpose registers <i>(R0-R5)</i>
+Eight special registers used as temporary storage for use by instructions <i>(T0-T8)</i>
+Twelve extended registers used by internal macros <i>(E0-E12)</i>
+Eight binary registers used for program flow <i>(B0-B7) </i>
 
-Diagram: 
-[T8]...[T0][R5]...[R0][HC][B0]...[B7][E0]...[E12][DS][D0][D1]...  		
-HC ("home cell", offset of 15) and DS ("data start", offset of 36) are always 0.
+#### Diagram: 
+<pre>[T8]...[T0][R5]...[R0][HC][B0]...[B7][E0]...[E12][DS][D0][D1]...</pre><i>HC</i> ("home cell", offset of 15) and <i>DS</i> ("data start", offset of 36) are always 0.
 
 ## Instruction List: 		
-Capital arguments could be a location or value, context dependant.
+Capital arguments can be a location or value, context dependant.
 Lowercase arguments must be a value.
-Arguments encased in () are optional.
+Arguments encased in <i>()</i> are optional.
 
-Native instructions:
+<b>Native instructions</b>:
 <pre>
--Name-			-Description-	
+<b>Name</b>			<b>Description</b>	
 DEBUG			Inserts '!' into output
 BF X 			Inserts X into output
 MOV	X, Y		X = Y
 SWAP X, Y		Swaps X and Y
 SHIFTR X		Shifts all cells until a zero value to the right starting at X, @(X) == 0
-NOT	X		X = !X
+NOT	X			X = !X
 AND X, Y		X = X & Y
 INC	X, (y)		X = X + y (or 1, if no y)
 DEC	x, (y)		X = X + y (or 1, if no y)
@@ -49,22 +48,22 @@ IF_D X			Executes up to matching ENDIF_D if X > 0
 ENDIF_D X		End of 'IF' block, destroys value at X
 </pre>
 
-Internal macro instructions:
+<b>Internal macro instructions</b>:
 <pre>
--Name-			-Description-
+<b>Name</b>			<b>Description</b>
 IF_0...7 X		Puts X into binary register, thus not destroying the value
-ENDIF_0...7 X		End of 'IF' block
+ENDIF_0...7 X	End of 'IF' block
 OR X, Y			X = X || Y
 DIV X, Y		X = X / Y (integer division)
 PUTDEC X		Prints decimal-string of 8-bit value in X
 </pre>
 
-Special macros:
+<b>Special macros</b>:
 <pre>
--Name-			-Description-
+<b>Name</b>			<b>Description</b>
 PRINT "..."		Resolves to series of PUTCHAR instructions. '\n' is resolved to
 				10 (ASCII newline), when not escaped with a preceeding '\'
-PRINTLN "..."		Resolved to PRINT "..." + PUTCHAR 10 (newline)
+PRINTLN "..."	Resolved to PRINT "..." + PUTCHAR 10 (newline)
 </pre>
 
 ## How does the compiler work? 
@@ -79,9 +78,47 @@ The compiler does the following:
 8. Generate pseudo-BF (an intermediate language in which the native instructions are implemented in)
 9. Compile to Brainfuck
 
-Psueso-BF is a shorthand version of Brainfuck with the following mnemonics:
+<i>Psueso-BF</i> is a shorthand version of Brainfuck with the following mnemonics:
 <pre>
--Syntax-		-Implementation-
-@(x)			Move data pointer by to position X
-x(y)			Repeat the character 'x' y times
+<b>Syntax</b>		<b>Implementation</b>
+@(x)		Move data pointer by to position X
+x(y)		Repeat the character 'x' y times
+</pre>
+
+## Examples
+<b>Hello, world!</b>
+<pre>
+PRINTLN "Hello, world!"
+</pre>
+<b>99 bottles of beer on the wall</b>
+<pre>
+MOV R0, 99
+WHILE R0
+	PUTDEC R0
+	PRINT " bottles of beer on the wall, "
+	PUTDEC R0
+	PRINT " bottles of beer.\nTake one down, pass it around, "
+	DEC R0
+	PUTDEC R0
+	PRINTLN " bottles of beer on the wall."
+ENDWHILE
+</pre>
+<b>Print first 14 Fibbonaci numbers</b>
+<pre>
+MOV R0, 0
+MOV R1, 1
+PUTDEC R0
+PUTCHAR 10
+PUTDEC R1
+PUTCHAR 10
+ 
+MOV R2, 12
+WHILE R2
+	SWAP R0, R1
+	ADD R1, R0
+	PUTDEC R1
+	PUTCHAR 10	
+	DEC R2
+ENDWHILE
+
 </pre>
