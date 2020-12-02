@@ -24,23 +24,23 @@ Arguments encased in <i>()</i> are optional.
 
 <b>Native instructions</b>:
 <pre>
-<b>Name</b>		<b>Description</b>	
+<b>Name</b>			<b>Description</b>	
 DEBUG			Inserts '!' into output
 BF X 			Inserts X into output
 MOV X, Y		X = Y
 SWAP X, Y		Swaps X and Y
 SHIFTR X		Shifts all cells until a zero value to the right starting at X, @(X) == 0
-NOT	X		X = !X
+NOT X		X = !X
 AND X, Y		X = X & Y
-INC	X, (y)		X = X + y (or 1, if no y)
-DEC	x, (y)		X = X + y (or 1, if no y)
+INC X, (y)		X = X + y (or 1, if no y)
+DEC X, (y)		X = X + y (or 1, if no y)
 ADD X, Y		X = X + Y
 SUB X, Y		X = X - Y
 MUL X, Y		X = X * Y
 PUTCHAR	X		Puts X into STDOUT
 PUTSTR X		Puts null-terminated string at X + 1 into STDOUT, @(X) == 0 
 GETCHAR	X		Sets X to character from STDIN	
-CMP	X, Y		X = (X == Y)	
+CMP X, Y		X = (X == Y)	
 WHILE X			Loops up to matching ENDWHILE while X > 0
 ENDWHILE X		End of 'WHILE' block
 IF_D X			Executes up to matching ENDIF_D if X > 0 
@@ -70,7 +70,7 @@ The compiler does the following:
 1. Read program from source
 2. Format program to make it easily parsed
 3. Resolve special macros 
-4. Automatically resolve <i>IF</i> and <i>WHILE</i> blocks (i.e. add matching argument to <i>ENDWHILE</i>, resolve <i>IF></i> to <i>IF_0...7</i>)
+4. Automatically resolve <i>IF</i> and <i>WHILE</i> blocks (i.e. add matching argument to <i>ENDWHILE</i>, resolve <i>IF</i> to <i>IF_0...7</i>)
 5. Parse into a program data structure
 6. Resolve internal macros
 7. Resolve identifiers (i.e. replace <i>HC</i> with <i>@(15)</i>, etc.)
