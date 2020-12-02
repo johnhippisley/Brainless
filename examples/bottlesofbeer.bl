@@ -1,0 +1,10 @@
+MOV R0, 99
+WHILE R0
+	PUTDEC R0
+	PRINT " bottles of beer on the wall, "
+	PUTDEC R0
+	PRINT " bottles of beer.\nTake one down, pass it around, "
+	DEC R0
+	PUTDEC R0
+	PRINTLN " bottles of beer on the wall."
+ENDWHILE

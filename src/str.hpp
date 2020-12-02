@@ -17,7 +17,7 @@ namespace str
 	std::vector<std::string> split(std::string str, char delim);
 	std::vector<std::string> splitNotQuoted(std::string str, char delim);
 	std::string inBetween(std::string str, std::string start, std::string end);
-	std::string replaceAll(std::string str, std::string search,std::string replace);
+	std::string replaceAll(std::string str, std::string search, std::string replace);
 	std::string replaceAllNotQuoted(std::string str, std::string search, std::string replace);
 	std::string cut(std::string str, size_t pos1, size_t pos2);
 	std::string stripWhite(std::string str);
