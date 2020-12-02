@@ -1,4 +1,4 @@
-# Brainlesss
+# Brainless
 A simple compiler from an assembly-like language to Brainfuck.<br>
 <i>Note</i>: in no way is this compiler optimised (actually, it produces <i>extremley</i> slow programs).
 
