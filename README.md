@@ -30,7 +30,7 @@ BF X 			Inserts X into output
 MOV X, Y		X = Y
 SWAP X, Y		Swaps X and Y
 SHIFTR X		Shifts all cells until a zero value to the right starting at X, @(X) == 0
-NOT X		X = !X
+NOT X			X = !X
 AND X, Y		X = X & Y
 INC X, (y)		X = X + y (or 1, if no y)
 DEC X, (y)		X = X + y (or 1, if no y)
