@@ -1,6 +1,6 @@
 # Brainlesss
-A simple, extensive (will be), compiler from an assembly-like language to Brainfuck.
-<i>Note</i>: in no way is this compiler optimised (actually, it produces <b>extremley</b> slow programs).
+A simple, extensive (will be), compiler from an assembly-like language to Brainfuck.< /br>
+<i>Note</i>: in no way is this compiler optimised (actually, it produces <b>extremley</b> slow programs).< /br>
 Written by John Hippisley, 2020
 
 ## Usage
