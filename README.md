@@ -9,9 +9,9 @@ A simple compiler from an assembly-like language to Brainfuck.<br>
 </pre>
 
 ## Memory Layout:
-Six general purpose registers <i>(R0-R5)</i>
-Eight special registers used as temporary storage for use by instructions <i>(T0-T8)</i>
-Twelve extended registers used by internal macros <i>(E0-E12)</i>
+Six general purpose registers <i>(R0-R5)</i><br>
+Eight special registers used as temporary storage for use by instructions <i>(T0-T8)</i><br>
+Twelve extended registers used by internal macros <i>(E0-E12)</i><br>
 Eight binary registers used for program flow <i>(B0-B7) </i>
 
 #### Diagram: 
@@ -61,7 +61,7 @@ PUTDEC X		Prints decimal-string of 8-bit value in X
 <pre>
 <b>Name</b>			<b>Description</b>
 PRINT "..."		Resolves to series of PUTCHAR instructions. '\n' is resolved to
-		10 (ASCII newline), when not escaped with a preceeding '\'
+			10 (ASCII newline), when not escaped with a preceeding '\'
 PRINTLN "..."		Resolved to PRINT "..." + PUTCHAR 10 (newline)
 </pre>
 
