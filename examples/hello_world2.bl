@@ -1,0 +1,2 @@
+DATA D0, "\0Hello, world!\n\0"
+PUTSTR D0

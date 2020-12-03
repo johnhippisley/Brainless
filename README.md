@@ -60,6 +60,8 @@ PUTDEC X		Prints decimal-string of 8-bit value in X
 <b>Special macros</b>:
 <pre>
 <b>Name</b>			<b>Description</b>
+DATA X, "..."		Puts ASCII values of string into memory starting at X
+DATA X, Y, Z...		Puts values Y, Z, ... into memory starting at X
 PRINT "..."		Resolves to series of PUTCHAR instructions. '\n' is resolved to
 			10 (ASCII newline), when not escaped with a preceeding '\'
 PRINTLN "..."		Resolved to PRINT "..." + PUTCHAR 10 (newline)
