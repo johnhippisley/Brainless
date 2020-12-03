@@ -1,0 +1,5 @@
+# Hello world example
+DATA D0, "\0Hello, world!\n\0"
+PUTSTR D0
+
+# Slightly slower version: PRINT "Hello, world!\n"

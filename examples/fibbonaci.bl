@@ -1,10 +1,11 @@
+# Print first 14 (limited to 8 bits) numbers in the Fibbonaci sequence
+
 MOV R0, 0
 MOV R1, 1
 PUTDEC R0
 PUTCHAR 10
 PUTDEC R1
 PUTCHAR 10
- 
 MOV R2, 12
 WHILE R2
 	SWAP R0, R1

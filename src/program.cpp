@@ -72,7 +72,7 @@ std::vector<ins_t> resolveBlocks(std::vector<ins_t> instructions)
 	{
 		ins_t current = instructions.at(i);
 		if(str::equals(current.name, "WHILE")) whileStack.push_back(current.args.at(0).argString);
-		else if(str::equals(current.name, "ENDWHILE"))
+		else if(str::equals(current.name, "ENDWHILE") && current.args.size() == 0)
 		{
 			if(whileStack.size() == 0)
 			{
