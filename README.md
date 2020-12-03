@@ -91,6 +91,11 @@ x(y)		Repeat the character 'x' y times
 <pre>
 PRINTLN "Hello, world!"
 </pre>
+<i>or</i>
+<pre>
+DATA D0, "\0Hello, world!\n\0"
+PUTSTR D0
+</pre>
 <b>99 bottles of beer on the wall</b>
 <pre>
 MOV R0, 99
