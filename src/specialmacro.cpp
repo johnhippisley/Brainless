@@ -66,39 +66,43 @@ program_t resolveSpecialMacros(program_t formattedProgram)
 	for(int l = 0; l < (int) formattedProgram.size(); l++)
 	{
 		ins_t line = parseInstruction(formattedProgram.at(l));
-		std::string arg = line.args.at(0).argString;
-		if(line.valid)
+		if(line.args.size() > 0)
 		{
-			bool macroFound = false;
-			program_t replace;
-			if(str::equals(line.name, "PRINT"))
+			std::string arg = line.args.at(0).argString;
+			if(line.valid)
 			{
-				macroFound = true;
-				replace = generatePutCharSeries(resolveEscapeCodes(str::inBetween(arg, "\"", "\"")));
-			}
-			else if(str::equals(line.name, "PRINTLN"))
-			{
-				macroFound = true;
-				replace = generatePutCharSeries(resolveEscapeCodes(str::inBetween(arg, "\"", "\"").append(std::string(1, '\n'))));
-			}
-			else if(str::equals(line.name, "DATA"))
-			{
-				macroFound = true;
-				int location = str::toInt(str::inBetween(replaceIdentifiers(arg), "@(", ")"));
-				std::string arg2 = line.args.at(1).argString;
-				std::vector<int> data;
-				if(line.args.size() == 2 && arg2.at(0) == '"')
-					data = stringToValues(resolveEscapeCodes(str::inBetween(arg2, "\"", "\"")));
-				else if(line.args.size() >= 2)
-					for(size_t a = 1; a < line.args.size(); a++) data.push_back(line.args.at(a).argValue);
-				replace = generateMovSeries(location, data);
-			}
-			if(macroFound)
-			{
-				formattedProgram.erase(formattedProgram.begin() + l);
-				formattedProgram = insertVector(l, formattedProgram, replace);
+				bool macroFound = false;
+				program_t replace;
+				if(str::equals(line.name, "PRINT"))
+				{
+					macroFound = true;
+					replace = generatePutCharSeries(resolveEscapeCodes(str::inBetween(arg, "\"", "\"")));
+				}
+				else if(str::equals(line.name, "PRINTLN"))
+				{
+					macroFound = true;
+					replace = generatePutCharSeries(resolveEscapeCodes(str::inBetween(arg, "\"", "\"").append(std::string(1, '\n'))));
+				}
+				else if(str::equals(line.name, "DATA"))
+				{
+					macroFound = true;
+					int location = str::toInt(str::inBetween(replaceIdentifiers(arg), "@(", ")"));
+					std::string arg2 = line.args.at(1).argString;
+					std::vector<int> data;
+					if(line.args.size() == 2 && arg2.at(0) == '"')
+						data = stringToValues(resolveEscapeCodes(str::inBetween(arg2, "\"", "\"")));
+					else if(line.args.size() >= 2)
+						for(size_t a = 1; a < line.args.size(); a++) data.push_back(line.args.at(a).argValue);
+					replace = generateMovSeries(location, data);
+				}
+				if(macroFound)
+				{
+					formattedProgram.erase(formattedProgram.begin() + l);
+					formattedProgram = insertVector(l, formattedProgram, replace);
+				}
 			}
 		}
+	
 	}
 	return formattedProgram;
 }
