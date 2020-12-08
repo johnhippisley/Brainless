@@ -18,7 +18,7 @@ const int HOME_OFFSET = 15, DATA_OFFSET = 40;
 /*
 	List of basic instructions, required arguments, and their implementations 
 	Algorithms taken from https://https://esolangs.org/wiki/Brainfuck_algorithms
-	and various other sources.
+	and http://www.inshame.com/2008/02/efficient-brainfuck-tables.html
 */
 #define _L arg_t::LOCATION
 #define _V arg_t::VALUE
