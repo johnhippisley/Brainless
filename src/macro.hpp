@@ -12,6 +12,7 @@ typedef struct MacroDefinition
 } macro_t;
 
 // To simplify the compiler, extended instructions are 'macros'
+// Name X, Y, Z, A, B, C, ...
 #define SPLIT(x) str::split(x, '\n')
 const std::vector<macro_t> MACRO_LIST = 
 {
@@ -32,13 +33,14 @@ const std::vector<macro_t> MACRO_LIST =
 	{"ENDIF_6", SPLIT("ENDIF_D B6")},
 	{"ENDIF_7", SPLIT("ENDIF_D B7")},
 	{"OR",		SPLIT("MOV B7,0\nCMP B7,X\nMOV B6,0\nCMP B6,Y\nMOV X,1\nIF_D B7\nIF_D B6\nMOV X,0\nENDIF_D B6\nENDIF_D B7")},
-	{"DIV", 	SPLIT("MOV E7,X\nMOV E6,Y\nMOV E5,0\nWHILE E7\nDEC E7\nDEC E6\nMOV E4,0\nCMP E4,E6\nIF_7 E4\nINC E5\n"
-				  	  "MOV E6,Y\nENDIF_7\nENDWHILE E7\nMOV X,E5\nMOV E4,0\nMOV E5,0\nMOV E6,0\nMOV E7,0")},
-	{"PUTDEC",	SPLIT("MOV E0,X\nMOV E1,E0\nMOV E2,100\nMOV E3,10\nMOV E8,0\nDIV E1,E2\nIF_7 E1\nINC E1,'0'"
-					  "\nPUTCHAR E1\nDEC E1,'0'\nENDIF_7\nCMP E8,E1\nMUL E1,E2\nSUB E0,E1\nMOV E1,E0"
-					  "\nDIV E1,E3\nNOT E8\nOR E8,E1\nIF_7 E8\nINC E1,'0'\nPUTCHAR E1\nDEC E1,'0'\n"
-					  "ENDIF_7\nMUL E1,E3\nSUB E0,E1\nMOV E1,E0\nINC E1,'0'\nPUTCHAR E1\nMOV E0,0\n"
-					  "MOV E1,0\nMOV E2,0\nMOV E3,0")}
+	{"DIV", 	SPLIT("MOV E7,X\nMOV E6,Y\nMOV E5,0\nWHILE E7\nDEC E7\nDEC E6\nMOV E4,0\nCMP E4,E6\nIF_7 E4\nINC E5\nMOV "
+				  	  "E6,Y\nENDIF_7\nENDWHILE E7\nMOV X,E5\nMOV E4,0\nMOV E5,0\nMOV E6,0\nMOV E7,0")},
+	{"PUTDEC",	SPLIT("MOV E0,X\nMOV E1,E0\nMOV E2,100\nMOV E3,10\nMOV E8,0\nDIV E1,E2\nIF_7 E1\nINC E1,'0'\nPUTCHAR E1\n"
+					  "DEC E1,'0'\nENDIF_7\nCMP E8,E1\nMUL E1,E2\nSUB E0,E1\nMOV E1,E0\nDIV E1,E3\nNOT E8\nOR E8,E1\nIF_7"
+					  " E8\nINC E1,'0'\nPUTCHAR E1\nDEC E1,'0'\nENDIF_7\nMUL E1,E3\nSUB E0,E1\nMOV E1,E0\nINC E1,'0'\nPUT"
+					  "CHAR E1\nMOV E0,0\nMOV E1,0\nMOV E2,0\nMOV E3,0")},
+	{"READ",	SPLIT("MOV I0,Y\nMOV I1,Y\nREAD_D\nMOV X,MR\nMOV MR,0\n")},
+	{"WRITE",	SPLIT("MOV I0,X\nMOV I1,X\nMOV MR,Y\nWRITE_D\n")}
 };
 
 program_t resolveMacro(ins_t instruction);

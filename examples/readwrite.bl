@@ -1,0 +1,18 @@
+# Write 1...9 into memory
+MOV R0, 10
+MOV R1, 0
+WHILE R0
+	WRITE R1, R1
+	DEC R0
+	INC R1
+ENDWHILE
+
+# Read and print it back
+MOV R0, 1
+MOV R1, 1
+WHILE R0
+	PUTDEC R0
+	PUTCHAR 10
+	INC R1
+	READ R0, R1
+ENDWHILE

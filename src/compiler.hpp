@@ -13,7 +13,7 @@ typedef struct InstructionDefinition
 	std::string pseudo;
 } insDef_t;
 
-const int HOME_OFFSET = 15, DATA_OFFSET = 37;
+const int HOME_OFFSET = 15, DATA_OFFSET = 40;
 
 /*
 	List of basic instructions, required arguments, and their implementations 
@@ -37,7 +37,10 @@ const std::vector<insDef_t> instructionList =
 	{"SHIFTR",		{_L},		"@(X)[>]<[[>+<-]<]>HC"},														// Shifts all cells until
 																												// a zero value to the right 
 																												// starting at X, where @(X) = 0 
-	
+	{"WRITE_D",		{},			"DS>[>>>[-<<<<+>>>>]<[->+<]<[->+<]<[->+<]>-]>>>[-]<[->+<]<[[-<+>]<<<[->>>>+<"	// Writes MR into D0 + I0
+								"<<<]>>-]<<HC"},
+	{"READ_D",		{},			"DS>[>>>[-<<<<+>>>>]<<[->+<]<[->+<]>-]>>>[-<+<<+>>>]<<<[->>>+<<<]>[[-<+>]>[-"	// Reads D0 + I0 into MR
+								"<+>]<<<<[->>>>+<<<<]>>-]<<HC"},
 	// Bitwise instructions
 	{"NOT",			{_L},		"T0[-]@(X)[T0+@(X)[-]]+T0[@(X)-T0-]HC"},										// Sets X = !@(X)
 	{"AND",			{_L, _L},	"T0[-]T1[-]@(X)[T1+@(X)-]T1[T1[-]@(Y)[T1+T0+@(Y)-]T0[@(Y)+T0-]T1[@(X)+T1[-]]"	// Sets X = @(X) & @(Y)
