@@ -21,9 +21,9 @@ Infinite addressable space <i>(D0, D1, ...)</i>, can also be addressed by value 
 <i>I0</i> and <i>I1</i> are always set to the same value.
 
 ## Instruction List: 		
-Capital arguments can be a location or value, context dependant.
-Lowercase arguments must be a value.
-Arguments encased in <i>()</i> are optional.
+Capital arguments can be a location or value, context dependant.<br>
+Lowercase arguments must be a value.<br>
+Arguments encased in <i>()</i> are optional.<br>
 
 <b>Keywords</b>:
 <pre>
@@ -60,7 +60,7 @@ PRINT "..."		Resolves to series of PUTCHAR instructions. '\n' is resolved to
 PRINTLN "..."		Resolved to PRINT "..." + PUTCHAR 10 (newline)
 </pre>
 
-Here are the keywords seperated by category:
+Here are the keywords seperated by category:<br>
 <b>Native instructions</b>:
 <pre>
 <b>Name</b>			<b>Description</b>	
