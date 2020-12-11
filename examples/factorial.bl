@@ -1,0 +1,44 @@
+# Factorial program (for results up to 256)
+# Written by John Hippisley
+
+# Read inputted string into memory until newline
+MOV R0, 0	# Holds current character
+MOV R1, 10	# Newline
+MOV R2, 1	# Loop flag
+MOV R3, 0	# Write index
+WHILE R2
+	GETCHAR R0
+	WRITE R3, R0
+	INC R3
+	MOV R2, R0
+	CMP R2, R1
+	NOT R2
+ENDWHILE
+
+# Calculate 8-bit value of decimal string
+MOV R1, 1	# Digit multiplier
+MOV R2, 10	# Base 10
+DEC R3, 1	# Current index of number string
+MOV R4, 0	# Number to take factorial of
+WHILE R3
+	DEC R3
+	READ R0, R3
+	DEC R0, '0'
+	MUL R0, R1
+	ADD R4, R0
+	MUL R1, R2
+ENDWHILE
+
+PUTDEC R4
+PRINT "! = "
+
+# Calculate factorial
+MOV R5, 1	# Result
+WHILE R4
+	MUL R5, R4
+	DEC R4
+ENDWHILE 
+
+# Print it
+PUTDEC R5
+PUTCHAR 10

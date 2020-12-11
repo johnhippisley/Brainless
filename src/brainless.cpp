@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 		for(ins_t ins : blocksResolved) 
 		{
 			int padding = 12 - ins.name.length(); 
-			std::cout << ++i << ")\t\"" << ins.name << "\"";
+			std::cout << i++ << ")\t\"" << ins.name << "\": ";
 			if(ins.args.size() > 0)
 			{
 				std::cout << ":" << std::string(padding > 0 ? padding : 0, ' ') << "{ ";

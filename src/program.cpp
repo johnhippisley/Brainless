@@ -13,6 +13,7 @@ program_t loadProgram(std::string path)
 	}
 	for(std::string line; std::getline(ifstream, line);)
 	{
+		line = str::replaceAll(line, "\r", "\n"); 
 		std::string formatted = formatInstruction(line);
 		if(!str::equals(formatted, "")) program.push_back(formatted);
 	}

@@ -39,7 +39,7 @@ NOT X			X = !X
 AND X, Y		X = X & Y
 OR X, Y			X = X || Y
 INC X, (y)		X = X + y (or 1, if no y)
-DEC X, (y)		X = X + y (or 1, if no y)
+DEC X, (y)		X = X - y (or 1, if no y)
 ADD X, Y		X = X + Y
 SUB X, Y		X = X - Y
 MUL X, Y		X = X * Y
@@ -74,7 +74,7 @@ READ_D			Reads D0 + I0 into MP
 NOT X			X = !X
 AND X, Y		X = X & Y
 INC X, (y)		X = X + y (or 1, if no y)
-DEC X, (y)		X = X + y (or 1, if no y)
+DEC X, (y)		X = X - y (or 1, if no y)
 ADD X, Y		X = X + Y
 SUB X, Y		X = X - Y
 MUL X, Y		X = X * Y
@@ -139,6 +139,32 @@ PRINTLN "Hello, world!"
 DATA D0, "\0Hello, world!\n\0"
 PUTSTR D0
 </pre>
+<b>Reverse string</b>
+<pre>
+# Read inputted string into memory until newline
+MOV R0, 0	# Holds current character
+MOV R1, 10	# Newline
+MOV R2, 1	# Loop flag
+MOV R3, 0	# Write index
+WHILE R2
+	GETCHAR R0
+	WRITE R3, R0
+	INC R3
+	MOV R2, R0
+	CMP R2, R1
+	NOT R2
+ENDWHILE
+
+PRINT "Reversed: "
+# Print reversed output
+DEC R3
+WHILE R3
+	DEC R3
+	READ R0, R3
+	PUTCHAR R0
+ENDWHILE
+PUTCHAR 10
+</pre>
 <b>99 bottles of beer on the wall</b>
 <pre>
 MOV R0, 99
@@ -169,5 +195,9 @@ WHILE R2
 	PUTCHAR 10	
 	DEC R2
 ENDWHILE
-
 </pre>
+
+## TODO
+* Add instructions compatible with data types over 8 bits<br>
+* Add <i>GETDEC</i> instruction for easy input<br>
+* Optimization (!!)
