@@ -55,10 +55,10 @@ int main(int argc, char* argv[])
 		for(ins_t ins : blocksResolved) 
 		{
 			int padding = 12 - ins.name.length(); 
-			std::cout << i++ << ")\t\"" << ins.name << "\": ";
+			std::cout << i++ << ")\t\"" << ins.name << "\"";
 			if(ins.args.size() > 0)
 			{
-				std::cout << ":" << std::string(padding > 0 ? padding : 0, ' ') << "{ ";
+				std::cout << ": " << std::string(padding > 0 ? padding : 0, ' ') << "{ ";
 				for(int a = 0; a < (int) ins.args.size(); a++) 
 					std::cout << "\"" << ins.args.at(a).argString << "\"" << (ins.args.at(a).argValue != -1 ? 
 						std::string(" (").append(std::to_string(ins.args.at(a).argValue)).append(")"): "")

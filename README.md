@@ -47,7 +47,7 @@ DIV X, Y		X = X / Y (integer division)
 PUTCHAR	X		Puts X into STDOUT
 PUTDEC X		Prints decimal-string of 8-bit value in X
 PUTSTR X		Puts null-terminated string at X + 1 into STDOUT, @(X) == 0 
-GETCHAR	X		Sets X to character from STDIN	
+GETCHAR	(X)		Sets X to character from STDIN	
 CMP X, Y		X = (X == Y)	
 IF X			Executes up to matching ENDIF if X > 0
 ENDIF			End of 'IF' block
@@ -80,7 +80,7 @@ SUB X, Y		X = X - Y
 MUL X, Y		X = X * Y
 PUTCHAR	X		Puts X into STDOUT
 PUTSTR X		Puts null-terminated string at X + 1 into STDOUT, @(X) == 0 
-GETCHAR	X		Sets X to character from STDIN	
+GETCHAR	(X)		Sets X to character from STDIN	
 CMP X, Y		X = (X == Y)	
 WHILE X			Loops up to matching ENDWHILE while X > 0
 ENDWHILE X		End of 'WHILE' block

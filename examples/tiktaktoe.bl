@@ -1,0 +1,188 @@
+## Tik-Tak-Toe!
+## Written by John Hippisley
+
+# Print intro
+PRINTLN "Tik-Tak-Toe! Written by John Hippisley, 2020"
+PRINTLN "Board layout:"
+PRINTLN "1 | 2 | 3"
+PRINTLN "----------"
+PRINTLN "4 | 5 | 6"
+PRINTLN "----------"
+PRINTLN "7 | 8 | 9"
+PUTCHAR 10
+
+# D0-D8 represents the board
+# Empty = 0, X = 1, O = 2
+MOV D9, 1			# Running flag
+MOV D10, 0			# Turn flag; X = 0, O = 1
+DATA D11, " XO"		# Characters for printing board
+
+# Data representing winning combinations of board indexes
+DATA D14, 0,1,2, 3,4,5, 6,7,8, 0,3,6, 1,4,7, 2,5,8, 0,4,8, 2,4,6
+
+# Loop while running flag is true
+WHILE D9
+
+	# Input move until it's valid
+	MOV R2, 1			# Invalid input flag
+	WHILE R2
+		MOV R2, 0
+		# Print dialogue
+		MOV R0, D10
+		INC R0, 12
+		READ R0, R0
+		PUTCHAR R0
+		PRINT "'s turn. Play your move (1-9): "
+		# Get input
+		GETCHAR R0
+		GETCHAR R1
+		# Set repeat flag if input isn't one character and a newline
+		MOV R3, 10
+		CMP R3, R1
+		NOT R3
+		IF R3
+			MOV R2, 1
+			# Eat input up to newline
+			MOV R4, 1
+			WHILE R4
+				GETCHAR R4
+				DEC R4, 10
+			ENDWHILE
+		ENDIF
+		DEC R0, '0'
+		# Set repeat flag if input isn't 0-9
+		MOV R3, R0
+		MOV R4, 10
+		DIV R3, R4
+		IF R3
+			MOV R2, 1
+		ENDIF
+		# Set repeat flag if board state != 0
+		DEC R0, 1
+		READ R1, R0
+		IF R1
+			MOV R2, 1
+		ENDIF
+	ENDWHILE
+	
+	# Handle input
+	MOV R1, D10
+	INC R1				# Board state to write
+	WRITE R0, R1
+	NOT D10 			# Reverse turns 
+	
+	# Draw the board
+	MOV R0, 0			# Board index
+	MOV R1, 3			# Columns
+	MOV R2, 3			# Rows
+	MOV R3, 0 			# Current board state
+	WHILE R1			# Loop through columns
+		WHILE R2		# Loop through rows
+			# Read current board cell and print corresponding character
+			READ R3, R0
+			INC R3, 11
+			READ R3, R3
+			PUTCHAR R3
+			DEC R2
+			IF R2
+				PRINT " | "
+			ENDIF 
+			INC R0
+		ENDWHILE
+		PUTCHAR 10
+		DEC R1
+		IF R1
+			PRINTLN "----------"
+		ENDIF
+		MOV R2, 3	# Reset for next row
+	ENDWHILE
+	PUTCHAR 10
+
+	# Determine if X won
+	MOV R5, 8			# 8 unique match triplets
+	MOV R4, 14			# Current triplet data index
+	WHILE R5
+		MOV R0, R4		# Combo data index
+		MOV R1, 0		# Match counter
+		MOV R2, 3		# Counter
+		WHILE R2
+			# Read index and test if == 1
+			READ R3, R0
+			READ R3, R3
+			DEC R3
+			NOT R3
+			IF R3
+				INC R1	# If equal, found a match
+			ENDIF
+			INC R0
+			DEC R2
+		ENDWHILE
+		# Test whether we found three matches
+		DEC R1, 3
+		NOT R1
+		IF R1
+			# If so, that's a win
+			MOV R2, 0
+			MOV D9, 0
+			PRINTLN "X won! Better luck next time, O."
+		ENDIF
+		# Put index at next triplet
+		INC R4, 3
+		DEC R5
+	ENDWHILE
+
+	# Determine if O won
+	MOV R5, 8			# 8 unique match triplets
+	MOV R4, 14			# Current triplet data index
+	WHILE R5
+		MOV R0, R4		# Combo data index
+		MOV R1, 0		# Match counter
+		MOV R2, 3		# Counter
+		WHILE R2
+			# Read index and test if == 2
+			READ R3, R0
+			READ R3, R3
+			DEC R3, 2
+			NOT R3
+			IF R3
+				INC R1	# If equal, found a match
+			ENDIF
+			INC R0
+			DEC R2
+		ENDWHILE
+		# Test whether we found three matches
+		DEC R1, 3
+		NOT R1
+		IF R1
+			# If so, that's a win
+			MOV R2, 0
+			MOV D9, 0
+			PRINTLN "O won! Better luck next time, X."
+		ENDIF
+		# Put index at next triplet
+		INC R4, 3
+		DEC R5
+	ENDWHILE
+
+	# Determine if it's a tie (whole board is filled)
+	MOV R0, 0			# Board index
+	MOV R1, 9			# 9 total spaces
+	MOV R3, 1			# Tie flag
+	WHILE R1
+		# Read board at index at check if == 0
+		READ R2, R0
+		NOT R2
+		IF R2
+			MOV R3, 0
+			MOV R1, 1
+		ENDIF
+		INC R0
+		DEC R1
+	ENDWHILE
+	IF R3
+		MOV D9, 0
+		PRINTLN "No one won! It's a tie."
+	ENDIF
+ENDWHILE
+
+PRINTLN "Thanks for playing!"

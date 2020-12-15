@@ -61,6 +61,7 @@ const std::vector<insDef_t> instructionList =
 																												// where @(X) = 0
 	// Standard input instructions
 	{"GETCHAR",		{_L},		"@(X),HC"},																		// Stores character from STDIN to X
+	{"GETCHAR",		{},			"T0,[-]HC"},																	// Eats character from STDIN
 	// Comparison instructions
 	{"CMP",			{_L, _L},	"T0[-]T1[-]@(X)[T1+@(X)-]+@(Y)[T1-T0+@(Y)-]T0[@(Y)+T0-]T1[@(X)-T1[-]]HC"},		// Sets X = (X == Y)
 	{"WHILE",		{_L},		"@(X)[HC"},																		// Loops until 'ENDWHILE X' while @(X) > 0
