@@ -22,6 +22,7 @@ namespace str
 	std::string cut(std::string str, size_t pos1, size_t pos2);
 	std::string stripWhite(std::string str);
 	int toInt(std::string str);
+	std::string resolveEscapeCodes(std::string str);
 }
 
 #endif

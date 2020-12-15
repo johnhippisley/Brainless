@@ -41,7 +41,7 @@ WHILE D38
 			# Get input and set repeat flag if theres < 2 characters
 			GETCHAR R0
 			MOV R1, R0
-			DEC R0, 10
+			DEC R0, '\n'
 			NOT R0
 			IF R0
 				MOV R2, 1
@@ -53,7 +53,7 @@ WHILE D38
 				GETCHAR R1
 			ENDIF
 			NOT R2
-			MOV R3, 10
+			MOV R3, '\n'
 			CMP R3, R1
 			NOT R3
 			IF R3
@@ -62,13 +62,13 @@ WHILE D38
 				MOV R4, 1
 				WHILE R4
 					GETCHAR R4
-					DEC R4, 10
+					DEC R4, '\n'
 				ENDWHILE
 			ENDIF
 			DEC R0, '0'
 			# Set repeat flag if input isn't 0-9
 			MOV R3, R0
-			MOV R4, 10
+			MOV R4, '\n'
 			DIV R3, R4
 			IF R3
 				MOV R2, 1
@@ -204,24 +204,30 @@ WHILE D38
 
 	# Set loop flag if we want to play again
 	PRINT "Would you like to play again? (Y/N): "
+	# Test if there's more than one character
 	GETCHAR R0
-	MOV R1, 1
-	WHILE R1				# Eat up to newline
-		GETCHAR R1
-		DEC R1, 10
-	ENDWHILE
-	# Test if first characer is == 'Y' || == 'y'
 	MOV R1, R0
-	DEC R0, 'Y'
-	NOT R0
+	DEC R0, '\n'
 	IF R0
-		MOV D38, 1			# If so, set running flag
-	ENDIF
-	MOV R0, R1
-	DEC R0, 'y'
-	NOT R0
-	IF R0
-		MOV D38, 1			# If so, set running flag
+		MOV R0, R1
+		MOV R1, 1
+		WHILE R1				# Eat up to newline
+			GETCHAR R1
+			DEC R1, '\n'
+		ENDWHILE
+		# Test if first characer is == 'Y' || == 'y'
+		MOV R1, R0
+		DEC R0, 'Y'
+		NOT R0
+		IF R0
+			MOV D38, 1			# If so, set running flag
+		ENDIF
+		MOV R0, R1
+		DEC R0, 'y'
+		NOT R0
+		IF R0
+			MOV D38, 1			# If so, set running flag
+		ENDIF
 	ENDIF
 ENDWHILE
 

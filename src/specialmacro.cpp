@@ -1,33 +1,10 @@
 #include "specialmacro.hpp"
+#include "str.hpp"
 #include <iostream>
-
-std::string resolveEscapeCodes(std::string str)
-{
-	for(int c = 0; c < (int) str.length() - 1; c++)
-	{
-		if(str.at(c) == '\\')
-		{
-			char escape = tolower(str.at(c + 1));
-			if(escape == 'a') str.replace(c, 2, std::string(1, '\x07'));
-			else if(escape == 'b') str.replace(c, 2, std::string(1, '\x08'));
-			else if(escape == 't') str.replace(c, 2, std::string(1, '\x09'));
-			else if(escape == 'n') str.replace(c, 2, std::string(1, '\x0A'));
-			else if(escape == 'v') str.replace(c, 2, std::string(1, '\x0B'));
-			else if(escape == 'f') str.replace(c, 2, std::string(1, '\x0C'));
-			else if(escape == 'r') str.replace(c, 2, std::string(1, '\x0D'));
-			else if(escape == 'e') str.replace(c, 2, std::string(1, '\x1B'));
-			else if(escape == '\\') str.replace(c, 2, std::string(1, '\\'));
-			else if(escape == '\'') str.replace(c, 2, std::string(1, '\''));
-			else if(escape == '"') str.replace(c, 2, std::string(1, '"'));
-			else if(escape == '0') str.replace(c, 2, std::string(1, '\0'));
-		}
-	}
-	return str;
-}
 
 std::vector<int> stringToValues(std::string str)
 {
-	std::string deEscaped = resolveEscapeCodes(str);
+	std::string deEscaped = str::resolveEscapeCodes(str);
 	std::vector<int> ret;
 	for(size_t c = 0; c < str.length(); c++) ret.push_back((int) str.at(c));
 	return ret;
@@ -76,12 +53,12 @@ program_t resolveSpecialMacros(program_t formattedProgram)
 				if(str::equals(line.name, "PRINT"))
 				{
 					macroFound = true;
-					replace = generatePutCharSeries(resolveEscapeCodes(str::inBetween(arg, "\"", "\"")));
+					replace = generatePutCharSeries(str::resolveEscapeCodes(str::inBetween(arg, "\"", "\"")));
 				}
 				else if(str::equals(line.name, "PRINTLN"))
 				{
 					macroFound = true;
-					replace = generatePutCharSeries(resolveEscapeCodes(str::inBetween(arg, "\"", "\"").append(std::string(1, '\n'))));
+					replace = generatePutCharSeries(str::resolveEscapeCodes(str::inBetween(arg, "\"", "\"").append(std::string(1, '\n'))));
 				}
 				else if(str::equals(line.name, "DATA"))
 				{
@@ -90,7 +67,7 @@ program_t resolveSpecialMacros(program_t formattedProgram)
 					std::string arg2 = line.args.at(1).argString;
 					std::vector<int> data;
 					if(line.args.size() == 2 && arg2.at(0) == '"')
-						data = stringToValues(resolveEscapeCodes(str::inBetween(arg2, "\"", "\"")));
+						data = stringToValues(str::resolveEscapeCodes(str::inBetween(arg2, "\"", "\"")));
 					else if(line.args.size() >= 2)
 						for(size_t a = 1; a < line.args.size(); a++) data.push_back(line.args.at(a).argValue);
 					replace = generateMovSeries(location, data);

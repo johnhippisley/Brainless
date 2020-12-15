@@ -98,6 +98,30 @@ std::string str::replaceAllNotQuoted(std::string str, std::string search, std::s
 	return str;
 }
 
+std::string str::resolveEscapeCodes(std::string str)
+{
+	for(int c = 0; c < (int) str.length() - 1; c++)
+	{
+		if(str.at(c) == '\\')
+		{
+			char escape = tolower(str.at(c + 1));
+			if(escape == 'a') str.replace(c, 2, std::string(1, '\x07'));
+			else if(escape == 'b') str.replace(c, 2, std::string(1, '\x08'));
+			else if(escape == 't') str.replace(c, 2, std::string(1, '\x09'));
+			else if(escape == 'n') str.replace(c, 2, std::string(1, '\x0A'));
+			else if(escape == 'v') str.replace(c, 2, std::string(1, '\x0B'));
+			else if(escape == 'f') str.replace(c, 2, std::string(1, '\x0C'));
+			else if(escape == 'r') str.replace(c, 2, std::string(1, '\x0D'));
+			else if(escape == 'e') str.replace(c, 2, std::string(1, '\x1B'));
+			else if(escape == '\\') str.replace(c, 2, std::string(1, '\\'));
+			else if(escape == '\'') str.replace(c, 2, std::string(1, '\''));
+			else if(escape == '"') str.replace(c, 2, std::string(1, '"'));
+			else if(escape == '0') str.replace(c, 2, std::string(1, '\0'));
+		}
+	}
+	return str;
+}
+
 std::string str::cut(std::string str, size_t pos1, size_t pos2) { return str.substr(pos1, pos2 - pos1 + 1); }
 std::string str::stripWhite(std::string str){ return replaceAll(replaceAll(str, "\t", " "), "  ", " "); }
 bool str::equals(std::string a, std::string b){ return !a.compare(b); }

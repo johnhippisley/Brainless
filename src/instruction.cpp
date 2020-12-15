@@ -79,7 +79,7 @@ ins_t parseInstruction(std::string fIns)
 		}
 		else if(argString.at(0) == '\'')
 		{
-			newArg.argValue = (int) str::inBetween(newArg.argString, "'", "'").at(0);
+			newArg.argValue = (int) str::inBetween(str::resolveEscapeCodes(newArg.argString), "'", "'").at(0);
 			newArg.type = arg_t::VALUE;	
 		}
 		else if(isdigit(argString.at(0)))
