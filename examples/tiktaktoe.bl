@@ -11,11 +11,10 @@ PRINTLN "----------"
 PRINTLN "7 | 8 | 9"
 PUTCHAR 10
 
-# D0-D8 represents the board
-# Empty = 0, X = 1, O = 2
-MOV D9, 1			# Running flag
-MOV D10, 0			# Turn flag; X = 0, O = 1
-DATA D11, " XO"		# Characters for printing board
+# D0-D8 represents the board. Empty = 0, X = 1, O = 2
+MOV D9, 1				# Running flag
+MOV D10, 0				# Turn flag; X = 0, O = 1
+DATA D11, " XO"			# Characters for printing board
 
 # Data representing winning combinations of board indexes
 DATA D14, 0,1,2, 3,4,5, 6,7,8, 0,3,6, 1,4,7, 2,5,8, 0,4,8, 2,4,6
