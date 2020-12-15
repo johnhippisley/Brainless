@@ -94,7 +94,7 @@ WHILE D9
 		IF R1
 			PRINTLN "----------"
 		ENDIF
-		MOV R2, 3	# Reset for next row
+		MOV R2, 3		# Reset for next row
 	ENDWHILE
 	PUTCHAR 10
 
