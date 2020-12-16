@@ -211,7 +211,7 @@ WHILE D38
 	IF R0
 		MOV R0, R1
 		MOV R1, 1
-		WHILE R1				# Eat up to newline
+		WHILE R1			# Eat up to newline
 			GETCHAR R1
 			DEC R1, '\n'
 		ENDWHILE
@@ -220,13 +220,13 @@ WHILE D38
 		DEC R0, 'Y'
 		NOT R0
 		IF R0
-			MOV D38, 1			# If so, set running flag
+			MOV D38, 1		# If so, set running flag
 		ENDIF
 		MOV R0, R1
 		DEC R0, 'y'
 		NOT R0
 		IF R0
-			MOV D38, 1			# If so, set running flag
+			MOV D38, 1		# If so, set running flag
 		ENDIF
 	ENDIF
 ENDWHILE
